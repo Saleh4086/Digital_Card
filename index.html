@@ -37,7 +37,7 @@ label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,s
 
 <div class="actions">
 <a class="btn" href="tel:+19259175595"><span>☎</span>Call</a>
-<a class="btn" href="sms:+19259175595"><span>●</span>Text</a>
+<a class="btn" href="sms:+19259175595&body=Hi%20Sal%2C%20I%20got%20your%20digital%20business%20card%20and%20wanted%20to%20connect."><span>●</span>Text</a>
 <a class="btn" href="mailto:gharibyar61@gmail.com"><span>✉</span>Email</a>
 </div>
 
@@ -108,8 +108,21 @@ ${v('message')}`;
  location.href='mailto:gharibyar61@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 });
 async function shareCard(){
- const data={title:'Sal Gharibyar | Blackstone Signature Properties',text:'Sal Gharibyar - Real Estate Broker / Owner'};
- if(navigator.share){try{await navigator.share(data)}catch(e){}} else {alert('Use your browser Share button to send this card.');}
+ const data={
+   title:'Sal Gharibyar | Blackstone Signature Properties',
+   text:'Sal Gharibyar - Real Estate Broker / Owner',
+   url:'https://digital-card.gharibyar61.workers.dev/'
+ };
+ if(navigator.share){
+   try{await navigator.share(data)}catch(e){}
+ } else {
+   try{
+     await navigator.clipboard.writeText('https://digital-card.gharibyar61.workers.dev/');
+     alert('Card link copied. You can paste it into Messages, Mail, or anywhere else.');
+   }catch(e){
+     prompt('Copy this card link:', 'https://digital-card.gharibyar61.workers.dev/');
+   }
+ }
 }
 </script>
 </body></html>
