@@ -26,3 +26,19 @@ FINAL PATCH:
   https://digital-card.gharibyar61.workers.dev/
 - Text button opens a new message to (925) 917-5595 with:
   "Hi Sal, I got your digital business card and wanted to connect."
+
+
+QR CODE UPDATE:
+- Added a real scannable QR code pointing to:
+  https://digital-card.gharibyar61.workers.dev/
+- The QR is displayed directly on the digital card.
+- CRM direct-submit integration is intentionally not activated yet because the CRM/API destination must be identified first.
+
+
+FINAL CRM INTEGRATION:
+- Digital card forms POST directly to: https://blackstonesignatureproperty.com/api/leads
+- Source is saved as: Digital Business Card
+- Uses the existing secure website Worker -> Supabase CRM lead endpoint.
+- No Supabase secret is exposed in this digital card.
+- Success confirmation stays inside the card.
+- QR, Share My Card, Call, Text, Email, and Save to Contacts remain included.
