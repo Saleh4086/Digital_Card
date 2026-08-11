@@ -1,0 +1,13 @@
+BLACKSTONE DIGITAL CARD - CLOUDFLARE BUILD FIX
+
+Upload these to the ROOT of the Digital_Card GitHub repository:
+- package.json
+- wrangler.jsonc
+- public/ (entire folder)
+
+Cloudflare build settings:
+Build command: npm install
+Deploy command: npm run deploy
+Root directory: /
+
+This pins Wrangler to 4.114.0 and deploys only ./public, so unrelated files elsewhere in the repository are ignored.
