@@ -43,22 +43,19 @@ function buildLead(input) {
 }
 
 async function saveCRM(payload, env) {
-  const url = clean(env.SUPABASE_URL, 500).replace(/\/$/, "");
-  const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY;
+  // Digital Card CRM recovery: use the existing Blackstone website CRM API.
+  // This keeps Supabase credentials out of the Digital Card Worker and restores
+  // the same CRM route the card used when lead capture was working.
+  const crmEndpoint = clean(
+    env.CRM_API_URL || "https://blackstonesignatureproperty.com/api/leads",
+    1000
+  );
 
-  if (!url || !key) {
-    throw new Error("Digital Card Worker is missing Supabase CRM settings.");
-  }
-
-  if (env.CRM_OWNER_USER_ID) payload.user_id = env.CRM_OWNER_USER_ID;
-
-  const r = await fetch(`${url}/rest/v1/leads`, {
+  const r = await fetch(crmEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "apikey": key,
-      "Authorization": `Bearer ${key}`,
-      "Prefer": "return=representation"
+      "Accept": "application/json"
     },
     body: JSON.stringify(payload)
   });
@@ -68,9 +65,11 @@ async function saveCRM(payload, env) {
   try { data = raw ? JSON.parse(raw) : null; } catch { data = raw; }
 
   if (!r.ok) {
-    throw new Error(data?.message || data?.details || raw || `Supabase returned ${r.status}`);
+    throw new Error(data?.error || data?.message || data?.details || raw || `CRM API returned ${r.status}`);
   }
-  return Array.isArray(data) ? data[0] : data;
+
+  // Preserve the website API's lead result when available.
+  return data?.lead || data?.data || data || {};
 }
 
 async function emailSal(payload, saved, env) {
@@ -173,10 +172,8 @@ export default {
     if (url.pathname === "/api/health") {
       return json({
         ok: true,
-        crm_configured: Boolean(
-          env.SUPABASE_URL &&
-          (env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY)
-        ),
+        crm_configured: true,
+        crm_mode: "blackstone_website_api",
         owner_configured: Boolean(env.CRM_OWNER_USER_ID),
         email_configured: Boolean(
           env.RESEND_API_KEY &&
