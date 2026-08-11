@@ -1,28 +1,187 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>Sal Gharibyar | Blackstone Signature Properties</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--gold:#d8aa3d;--gold2:#f2d46b;--bg:#050505;--panel:#121212;--text:#fff;--muted:#bdbdbd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#24201a 0,#090909 32%,#000 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:560px;margin:auto;min-height:100vh;padding:20px 16px 44px}.hero{text-align:center;padding:12px 8px 22px}
+.logo{width:240px;max-width:72%;border-radius:12px}.portrait{width:156px;height:156px;object-fit:cover;border-radius:50%;border:3px solid var(--gold);margin:18px auto 8px;display:block}
+h1{margin:8px 0 2px;font-size:31px}.title{color:var(--gold2);font-weight:700;letter-spacing:.04em}.dre{color:#ddd;font-size:13px;margin-top:8px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.btn,.tile{border:1px solid #3c3c3c;background:linear-gradient(145deg,#171717,#0b0b0b);color:#fff;border-radius:16px;text-decoration:none;padding:14px 8px;text-align:center;font-weight:700}.btn span{display:block;font-size:24px;margin-bottom:5px;color:var(--gold)}
+.primary{display:block;background:linear-gradient(135deg,#a97916,#f0ca58);color:#090909;border-radius:16px;padding:16px;text-align:center;text-decoration:none;font-weight:800;margin:12px 0}
+.contact{background:#0e0e0e;border:1px solid #333;border-radius:18px;padding:16px;margin:12px 0}.contact a{color:#fff;text-decoration:none}.row{padding:8px 0;border-bottom:1px solid #262626}.row:last-child{border:0}
+h2{text-align:center;color:var(--gold2);font-size:20px;margin:28px 0 13px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{min-height:105px;display:flex;flex-direction:column;justify-content:center}.tile b{color:var(--gold2);font-size:16px}.tile small{color:#ccc;margin-top:7px}
+.full{grid-column:1/-1}.share{margin-top:14px}.foot{text-align:center;color:#8d8d8d;font-size:12px;margin-top:30px}
+.modal{position:fixed;inset:0;background:#000d;display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.open{display:flex}.sheet{width:min(560px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid #444;border-radius:24px 24px 0 0;padding:20px}
+.sheet h3{color:var(--gold2);font-size:23px;margin:0 0 12px}.close{float:right;border:0;background:#292929;color:white;border-radius:50%;width:36px;height:36px;font-size:20px}
+label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,select{width:100%;padding:13px;border-radius:11px;border:1px solid #444;background:#090909;color:#fff;font-size:16px}textarea{min-height:90px}
+.submit{width:100%;margin-top:16px;border:0;border-radius:13px;padding:15px;background:linear-gradient(135deg,#a97916,#f0ca58);font-size:16px;font-weight:800}
+.note{font-size:12px;color:#aaa;line-height:1.4;margin-top:10px}
+@media(max-width:380px){h1{font-size:27px}.services{grid-template-columns:1fr}.full{grid-column:auto}}
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>East Bay Real Estate &amp; Property Management | Blackstone Signature Properties</title><meta content="Broker-owned East Bay real estate, home search, seller representation, investment guidance and property management from Sal Gharibyar, DRE #01418692." name="description"/><link href="assets/site.css" rel="stylesheet"/><link href="assets/blackstone-ai-widget.css" rel="stylesheet"/><link href="https://blackstonesignatureproperty.com/" rel="canonical"/><meta content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" name="robots"/><meta content="website" property="og:type"/><meta content="Blackstone Signature Properties &amp; Investments" property="og:site_name"/><meta content="East Bay Real Estate &amp; Property Management | Blackstone Signature Properties" property="og:title"/><meta content="Broker-owned East Bay real estate, home search, seller representation, investment guidance and property management from Sal Gharibyar, DRE #01418692." property="og:description"/><meta content="https://blackstonesignatureproperty.com/" property="og:url"/><meta content="https://blackstonesignatureproperty.com/assets/logo.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="East Bay Real Estate &amp; Property Management | Blackstone Signature Properties" name="twitter:title"/><meta content="Broker-owned East Bay real estate, home search, seller representation, investment guidance and property management from Sal Gharibyar, DRE #01418692." name="twitter:description"/><meta content="https://blackstonesignatureproperty.com/assets/logo.png" name="twitter:image"/><meta content="#0b0d12" name="theme-color"/><script data-blackstone-seo="true" type="application/ld+json">{"@context":"https://schema.org","@type":"RealEstateAgent","@id":"https://blackstonesignatureproperty.com/#business","name":"Blackstone Signature Properties & Investments","alternateName":"Blackstone Signature Properties","url":"https://blackstonesignatureproperty.com/","logo":"https://blackstonesignatureproperty.com/assets/logo.png","image":["https://blackstonesignatureproperty.com/assets/logo.png","https://blackstonesignatureproperty.com/assets/sal-headshot.jpg"],"telephone":"+19259175595","email":"gharibyar61@gmail.com","priceRange":"$$","founder":{"@type":"Person","name":"Sal Gharibyar","jobTitle":"Broker / Owner"},"address":{"@type":"PostalAddress","addressLocality":"Discovery Bay","addressRegion":"CA","postalCode":"94505","addressCountry":"US"},"areaServed":[{"@type":"City","name":"Discovery Bay"},{"@type":"City","name":"Brentwood"},{"@type":"City","name":"Oakley"},{"@type":"City","name":"Antioch"},{"@type":"City","name":"Pittsburg"},{"@type":"City","name":"Concord"},{"@type":"City","name":"Bay Point"},{"@type":"City","name":"Byron"},{"@type":"City","name":"Walnut Creek"}],"sameAs":["https://www.zillow.com/profile/Sal%20Gharibyar","https://www.linkedin.com/in/sal-gharibyar-1119a755","https://www.facebook.com/BlackStone1977","https://www.instagram.com/salehgharibyar/"],"knowsLanguage":["English","Farsi"],"identifier":[{"@type":"PropertyValue","name":"California Broker DRE","value":"01418692"},{"@type":"PropertyValue","name":"California Corporate DRE","value":"02117470"}]}</script><script data-blackstone-seo="true" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://blackstonesignatureproperty.com/#website","url":"https://blackstonesignatureproperty.com/","name":"Blackstone Signature Properties & Investments","publisher":{"@id":"https://blackstonesignatureproperty.com/#business"},"potentialAction":{"@type":"SearchAction","target":"https://blackstonesignatureproperty.com/search.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script><script data-blackstone-seo="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blackstonesignatureproperty.com/"},{"@type":"ListItem","position":2,"name":"East Bay Real Estate & Property Management","item":"https://blackstonesignatureproperty.com/"}]}</script></head><body><header class="site-header"><a class="brand" href="index.html"><img alt="Blackstone Signature Properties &amp; Investments" decoding="async" src="assets/logo.png"/></a><button class="menu-toggle">MENU</button><nav><a href="search.html">Search Homes</a><a href="buyers.html">Buy</a><a href="sellers.html">Sell</a><a href="properties.html">Properties</a><a href="property-management.html">Property Management</a><a href="repair-request.html">Repairs</a><a href="mortgage-calculator.html">Mortgage</a><a href="blog.html">Insights</a><a href="education.html">Education</a><a href="about.html">About</a><a class="nav-cta" href="contact.html">Contact</a></nav></header><div aria-label="Daily mortgage interest rate ticker" class="homepage-rate-ticker" role="region"><a aria-label="Open the Blackstone mortgage calculator" class="rate-ticker-link" href="mortgage-calculator.html"><div class="rate-ticker-track"><div class="rate-ticker-set"><span class="ticker-label">BLACKSTONE DAILY RATE WATCH</span><span class="ticker-sep">◆</span><span>30-YEAR FIXED <strong data-live-rate="">6.78%</strong> <b class="ticker-flat" data-rate-change="">• UPDATED WEEKDAYS</b></span><span class="ticker-sep">◆</span><span>30-YEAR FHA <strong data-fha-rate="">6.32%</strong> <b class="ticker-flat" data-fha-change="">• DAILY MARKET INDEX</b></span><span class="ticker-sep">◆</span><span data-rate-date="">LATEST MORTGAGE NEWS DAILY INDEX</span><span class="ticker-sep">◆</span><span>OPEN THE BLACKSTONE MORTGAGE CALCULATOR →</span><span class="ticker-sep">◆</span></div><div aria-hidden="true" class="rate-ticker-set"><span class="ticker-label">BLACKSTONE DAILY RATE WATCH</span><span class="ticker-sep">◆</span><span>30-YEAR FIXED <strong data-live-rate="">6.78%</strong> <b class="ticker-flat" data-rate-change="">• UPDATED WEEKDAYS</b></span><span class="ticker-sep">◆</span><span>30-YEAR FHA <strong data-fha-rate="">6.32%</strong> <b class="ticker-flat" data-fha-change="">• DAILY MARKET INDEX</b></span><span class="ticker-sep">◆</span><span data-rate-date="">LATEST MORTGAGE NEWS DAILY INDEX</span><span class="ticker-sep">◆</span><span>OPEN THE BLACKSTONE MORTGAGE CALCULATOR →</span><span class="ticker-sep">◆</span></div></div></a></div><main>
-<section class="hero-carousel">
-<div class="hero-slide active" style="background-image:var(--hero-a)"></div><div class="hero-slide" style="background-image:var(--hero-b)"></div><div class="hero-slide" style="background-image:var(--hero-c)"></div><div class="hero-slide" style="background-image:var(--hero-d)"></div>
-<div class="hero-inner"><div class="hero-copy"><span class="eyebrow">East Bay Real Estate · Broker-Owned &amp; Operated</span><h1><span class="script">Elevated</span>Real Estate.<br/>Personal Representation.</h1><p class="hero-sub">A search-first real estate experience with the advantage of one broker-led company for buying, selling, investing and property management.</p><div class="actions"><a class="btn gold" href="search.html">Search Homes</a><a class="btn outline" href="property-management.html">Property Management</a></div></div>
-<div class="hero-search-modern"><div class="search-tabs"><button class="search-tab active" data-mode="buy">Buy</button><button class="search-tab" data-mode="rent">Rent</button><button class="search-tab" data-mode="manage">Property Owners</button></div><div class="search-panel"><h3 data-search-title="">Find your next home</h3><p data-search-text="">Search East Bay homes by city, ZIP, neighborhood or MLS number.</p><div class="search-box-large"><input data-search-input="" placeholder="City, ZIP, neighborhood or MLS #"/><button onclick="location.href='search.html'">Search</button></div><div class="quick-links"><a href="properties.html">Past Sales</a><a href="rental-evaluation.html">Free Rental Evaluation</a></div></div></div></div>
-<div class="hero-dots"><button aria-label="Luxury home 1" class="hero-dot active"></button><button aria-label="Luxury home 2" class="hero-dot"></button><button aria-label="Luxury home 3" class="hero-dot"></button><button aria-label="Luxury home 4" class="hero-dot"></button></div>
+.qrbox{margin:18px auto 4px;text-align:center;background:#0e0e0e;border:1px solid #333;border-radius:18px;padding:18px}
+.qrbox img{width:190px;max-width:65%;background:#fff;padding:8px;border-radius:14px}
+.qrbox b{display:block;color:var(--gold2);margin-bottom:10px;font-size:17px}
+.qrbox small{display:block;color:#bbb;margin-top:9px;line-height:1.35}
+
+</style>
+</head>
+<body>
+<main class="app">
+<section class="hero">
+<img class="logo" src="blackstone-logo.png" alt="Blackstone Signature Properties and Investments">
+<img class="portrait" src="sal-photo.jpeg" alt="Sal Gharibyar">
+<h1>Sal Gharibyar</h1>
+<div class="title">REAL ESTATE BROKER / OWNER</div>
+<div class="dre">DRE #01418692 &nbsp; | &nbsp; CORP DRE #02117470</div>
 </section>
-<section class="trust-bar"><div class="wrap"><div class="trust-item"><strong>20+ Years</strong><span>Real Estate Experience</span></div><div class="trust-item"><strong>300+ Homes</strong><span>Career Sales Experience</span></div><div class="trust-item"><strong>Broker-Led</strong><span>Direct Experienced Representation</span></div><div class="trust-item"><strong>One Company</strong><span>Buy · Sell · Invest · Manage</span></div></div></section>
-<section class="section"><div class="wrap split"><div><span class="section-script">Meet Sal</span><h2>Experience that reaches beyond the transaction.</h2><p class="section-copy">Sal Gharibyar has worked in real estate since 2004, helping buyers, sellers, investors and rental-property owners navigate changing markets throughout the East Bay. His approach combines hands-on brokerage experience, negotiation, investment perspective, renovation knowledge and property-management coordination.</p><p class="section-copy">Blackstone was built around a simple idea: clients should be able to rely on one experienced relationship whether they are purchasing a first home, selling, acquiring an investment, improving a property, leasing it or eventually selling it.</p><div class="bio-points"><div class="bio-point"><strong>Broker / Owner</strong><span>Blackstone Signature Properties &amp; Investments · DRE #01418692</span></div><div class="bio-point"><strong>East Bay Focus</strong><span>Discovery Bay, Brentwood, Oakley, Antioch, Concord, Walnut Creek and surrounding communities.</span></div><div class="bio-point"><strong>Client Services</strong><span>Residential sales, listings, buyers, first-time buyers, investors, rentals and property management.</span></div><div class="bio-point"><strong>Languages</strong><span>English and Farsi.</span></div></div><div class="social-row"><a class="social-link" href="https://www.zillow.com/profile/Sal%20Gharibyar" rel="noopener" target="_blank">Zillow</a><a class="social-link" href="https://www.linkedin.com/in/sal-gharibyar-1119a755" rel="noopener" target="_blank">LinkedIn</a><a class="social-link" href="https://www.facebook.com/BlackStone1977" rel="noopener" target="_blank">Facebook</a><a class="social-link" href="https://www.instagram.com/salehgharibyar/" rel="noopener" target="_blank">Instagram</a></div></div><div class="portrait-frame"><img alt="Sal Gharibyar, Broker and Owner" decoding="async" loading="lazy" src="assets/sal-headshot.jpg"/></div></div></section>
-<section class="services"><a class="service" href="buyers.html"><span class="num">01</span><h3>Buy</h3><p>Search, buyer education, offer strategy and representation from first showing to closing.</p><b>Explore buyer services →</b></a><a class="service" href="sellers.html"><span class="num">02</span><h3>Sell</h3><p>Pricing, preparation, marketing, negotiation and transaction oversight designed around your goals.</p><b>Explore seller services →</b></a><a class="service" href="property-management.html"><span class="num">03</span><h3>Manage</h3><p>Tenant screening, lease oversight, maintenance coordination, inspections and owner communication.</p><b>Explore property management →</b></a><a class="service" href="properties.html"><span class="num">04</span><h3>Invest</h3><p>Acquisition, rental analysis, improvement perspective and disposition strategy for residential investors.</p><b>View properties →</b></a></section>
-<section class="portfolio-strip"><div class="wrap"><div class="portfolio-head"><div><span class="section-script">Recent Track Record</span><h2>Selected past sales.</h2><p class="section-copy">A few properties shown on Sal's public Zillow sales profile. Use the portfolio page to explore more.</p></div><a class="btn dark" href="properties.html">View Past Sales</a></div><div class="sold-scroll">
-<a class="sold-card" href="https://www.zillow.com/homedetails/3439-Sanford-St-Concord-CA-94520/18342153_zpid/" rel="noopener" target="_blank"><div class="sold-image" style="background-image:url('assets/3439-sanford.jpg')"></div><div class="sold-body"><div class="sold-price">$810,000</div><div class="sold-address">3439 Sanford St · Concord</div><div class="sold-meta">4 bd · 2 ba · 1,390 sq ft</div><span class="sold-link">View on Zillow →</span></div></a>
-<a class="sold-card" href="https://www.zillow.com/homedetails/1908-Grizzly-Ct-Antioch-CA-94509/18295870_zpid/" rel="noopener" target="_blank"><div class="sold-image" style="background-image:url('assets/1908-grizzly.jpg')"></div><div class="sold-body"><div class="sold-price">$665,000</div><div class="sold-address">1908 Grizzly Ct · Antioch</div><div class="sold-meta">4 bd · 3 ba · 2,128 sq ft</div><span class="sold-link">View on Zillow →</span></div></a>
-<a class="sold-card" href="https://www.zillow.com/homedetails/2109-Rockne-Dr-Concord-CA-94518/18367662_zpid/" rel="noopener" target="_blank"><div class="sold-image" style="background-image:url('assets/2109-rockne.jpg')"></div><div class="sold-body"><div class="sold-price">$890,000</div><div class="sold-address">2109 Rockne Dr · Concord</div><div class="sold-meta">3 bd · 2 ba · 1,514 sq ft</div><span class="sold-link">View on Zillow →</span></div></a>
-</div><div class="sold-note">These cards use the actual property photos currently included in the Blackstone site. Property facts and sale prices link to Zillow for reference.</div></div></section>
-<section class="rate-teaser"><div class="wrap rate-teaser-grid"><div><span class="section-script">Mortgage Rate Watch</span><h2>Today’s rate. Your payment.</h2><p>See the latest 30-year fixed benchmark we can retrieve from Mortgage News Daily, then run the numbers with Blackstone’s mortgage calculator.</p><div class="rate-pill"><span>30-Year Fixed</span><strong data-live-rate="">6.76%</strong><small data-rate-date="">Market rate watch · 7/28/2026</small></div><p class="rate-disclaimer">Informational national market benchmark only. Your actual rate, APR, fees and qualification depend on the lender and borrower profile.</p></div><div class="rate-teaser-action"><div class="mini-payment"><span>Quick example</span><strong>$700,000 home</strong><p>Adjust down payment, taxes, insurance, HOA and interest rate on the full calculator.</p></div><a class="btn gold" href="mortgage-calculator.html">Open Mortgage Calculator</a><a class="text-link" href="https://www.mortgagenewsdaily.com/" rel="noopener" target="_blank">Rate source: Mortgage News Daily →</a></div></div></section><section class="section dark"><div class="wrap"><div class="section-head"><div><span class="section-script">Property Management</span><h2>Built into the real estate experience.</h2><p class="section-copy">Unlike a sales-only website, Blackstone gives rental owners and tenants their own service path without separating property management from the rest of the business.</p></div></div><div class="pm-feature-grid"><div class="pm-feature"><span class="eyebrow">Owners</span><h3>Protect the investment. Reduce the workload.</h3><p>Tenant screening, lease administration, rent collection oversight, maintenance coordination, inspections, owner communication and attorney-coordinated eviction support.</p><a class="btn gold" href="rental-evaluation.html">Free Rental Evaluation</a></div><div class="pm-feature"><span class="eyebrow">Tenants</span><h3>Apply and request service online.</h3><p>Applicants can be sent to RentSpree for screening while current tenants have a dedicated repair-request page.</p><div class="actions"><a class="btn gold" href="apply.html">Apply / RentSpree</a><a class="btn outline" href="repair-request.html">Repair Request</a></div></div></div></div></section>
-<section class="section"><div class="wrap"><div class="section-head"><div><span class="section-script">Lead Generation</span><h2>Useful landing pages for every audience.</h2></div></div><div class="cards"><a class="card" href="rental-evaluation.html"><span class="kicker">Property Owners</span><h3>Free Rental Evaluation</h3><p>Use this page with Facebook ads, mailers, QR codes and direct outreach to rental-property owners.</p></a><a class="card" href="home-value.html"><span class="kicker">Homeowners</span><h3>What Is My Home Worth?</h3><p>A seller lead page for homeowners requesting a personalized value and market consultation.</p></a><a class="card" href="repair-request.html"><span class="kicker">Current Tenants</span><h3>Repair Request</h3><p>A dedicated maintenance page ready to connect to your lead/repair database.</p></a></div></div></section>
-<section class="section"><div class="wrap"><div class="section-head"><div><span class="section-script">Blackstone Insights</span><h2>Market, mortgage &amp; property-management updates.</h2><p class="section-copy">A practical education hub built for daily market commentary and timely rental-owner updates.</p></div><a class="btn dark" href="blog.html">Read Insights</a></div><div class="cards"><a class="card" href="blog.html"><span class="kicker">Daily</span><h3>East Bay Market Pulse</h3><p>Inventory, demand, rates and what current conditions may mean for your next move.</p></a><a class="card" href="blog.html"><span class="kicker">Owners</span><h3>Property Management Updates</h3><p>Rental-market trends, compliance reminders and practical ownership guidance.</p></a><a class="card" href="education.html"><span class="kicker">Learn</span><h3>Real Estate Education Center</h3><p>Evergreen guides for buying, selling, renting and owning investment property.</p></a></div></div></section>
-<section class="wrap cta-row"><h2>Ready for your next move?</h2><div class="actions"><a class="btn dark" href="contact.html">Talk With Sal</a><a class="btn gold" href="search.html">Search Homes</a></div></section>
-</main><footer class="site-footer"><div class="wrap"><div class="footer-grid"><div><img alt="Blackstone Signature Properties &amp; Investments" class="footer-logo" decoding="async" loading="lazy" src="assets/logo.png"/><div class="footer-social"><a href="https://www.zillow.com/profile/Sal%20Gharibyar" rel="noopener" target="_blank">Zillow</a><a href="https://www.linkedin.com/in/sal-gharibyar-1119a755" rel="noopener" target="_blank">LinkedIn</a><a href="https://www.facebook.com/BlackStone1977" rel="noopener" target="_blank">Facebook</a><a href="https://www.instagram.com/salehgharibyar/" rel="noopener" target="_blank">Instagram</a></div></div><div><h4>Real Estate</h4><a href="search.html">Search Homes</a><br/><a href="buyers.html">Buyers</a><br/><a href="sellers.html">Sellers</a><br/><a href="properties.html">Properties &amp; Past Sales</a><br/><a href="mortgage-calculator.html">Mortgage Calculator</a><br/><a href="education.html">Real Estate Education</a><br/><a href="blog.html">Market &amp; PM Insights</a></div><div><h4>Property Management</h4><a href="property-management.html">Services</a><br/><a href="rental-evaluation.html">Rental Evaluation</a><br/><a href="repair-request.html">Repair Request</a><br/><a href="https://crm.blackstonesignatureproperties.com/" rel="noopener" target="_blank">Back At You CRM Login</a><br/><a href="apply.html">Apply / RentSpree</a></div><div><h4>Contact</h4><p>Sal Gharibyar · Broker / Owner<br/>DRE #01418692<br/>(925) 917-5595<br/>gharibyar61@gmail.com<br/>Serving the East Bay</p></div></div><div class="fine">Blackstone Signature Properties &amp; Investments. Real estate brokerage and property management services. Equal Housing Opportunity. MLS/IDX home search requires BridgeMLS IDX integration. Past-sale information links to third-party property pages for reference.</div></div></footer><script src="assets/site.js"></script>
-<div style="text-align:center;margin-top:40px;padding:20px;border-top:1px solid #ddd;font-size:14px;color:#666">
-<strong>Blackstone Signature Property</strong><br/>
-A Division of <strong>Eagle Rock Ventures Inc.</strong><br/>
-California DRE #02117470 | Broker DRE #01418692
+
+<div class="actions">
+<a class="btn" href="tel:+19259175595"><span>☎</span>Call</a>
+<a class="btn" href="sms:+19259175595&body=Hi%20Sal%2C%20I%20got%20your%20digital%20business%20card%20and%20wanted%20to%20connect."><span>●</span>Text</a>
+<a class="btn" href="mailto:gharibyar61@gmail.com"><span>✉</span>Email</a>
 </div>
-<script src="assets/blackstone-ai-widget.js"></script></body></html>
+
+<div class="contact">
+<div class="row">📞 <a href="tel:+19259175595">(925) 917-5595</a></div>
+<div class="row">✉️ <a href="mailto:gharibyar61@gmail.com">gharibyar61@gmail.com</a></div>
+<div class="row">🌐 <a href="https://blackstonesignatureproperty.com/" target="_blank">blackstonesignatureproperty.com</a></div>
+<div class="row">📍 Serving Discovery Bay, Brentwood, Oakley, Antioch, Pittsburg, Concord &amp; surrounding East Bay</div>
+</div>
+
+<a class="primary" href="sal-gharibyar.vcf" download>＋ SAVE TO CONTACTS</a>
+<div class="qrbox">
+  <b>SCAN MY DIGITAL CARD</b>
+  <img src="digital-card-qr.png" alt="QR code for Sal Gharibyar digital business card">
+  <small>Point your phone camera here to open and share my live card.</small>
+</div>
+
+<h2>WHAT CAN I HELP YOU WITH?</h2>
+<div class="services">
+<button class="tile" onclick="openForm('Buy a Home')"><b>⌂ BUY A HOME</b><small>Tell me what you're looking for</small></button>
+<button class="tile" onclick="openForm('Sell My Home')"><b>🏷 SELL MY HOME</b><small>Request a home value consultation</small></button>
+<button class="tile" onclick="openForm('Rental Property Evaluation')"><b>🔑 MANAGE MY RENTAL</b><small>Free rental property evaluation</small></button>
+<button class="tile" onclick="openForm('Investment Property')"><b>↗ INVESTMENT PROPERTY</b><small>Discuss your investment goals</small></button>
+<button class="tile full" onclick="openForm('Book a Consultation')"><b>📅 BOOK A CONSULTATION</b><small>Send your preferred date and time</small></button>
+</div>
+
+<button class="primary share" onclick="shareCard()">↗ SHARE MY CARD</button>
+<div class="foot">20+ YEARS OF EXPERIENCE<br>BROKER-OWNED &amp; OPERATED · DEDICATED TO YOUR SUCCESS</div>
+</main>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeForm()">
+<div class="sheet">
+<button class="close" onclick="closeForm()">×</button>
+<h3 id="formTitle">Contact Sal</h3>
+<form id="leadForm">
+<input type="hidden" id="interest">
+<label>Name *</label><input id="name" required>
+<label>Phone *</label><input id="phone" type="tel" required>
+<label>Email</label><input id="email" type="email">
+<label>Property Address / Area</label><input id="address">
+<label id="dateLabel" style="display:none">Preferred date &amp; time</label><input id="date" type="datetime-local" style="display:none">
+<label>How can I help?</label><textarea id="message"></textarea>
+<button class="submit" type="submit">SEND TO SAL</button>
+<div id="formStatus" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#171717;color:#fff"></div>
+<div class="note">Your information is submitted securely to Blackstone's CRM. You stay on this digital card and do not need to open your email app.</div>
+</form>
+</div></div>
+
+<script>
+function openForm(type){
+ document.getElementById('interest').value=type;
+ document.getElementById('formTitle').textContent=type;
+ const book=type==='Book a Consultation';
+ document.getElementById('date').style.display=book?'block':'none';
+ document.getElementById('dateLabel').style.display=book?'block':'none';
+ document.getElementById('modal').classList.add('open');
+}
+function closeForm(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('leadForm').addEventListener('submit',async function(e){
+ e.preventDefault();
+ const v=id=>document.getElementById(id).value;
+ const form=e.currentTarget;
+ const button=form.querySelector('.submit');
+ const status=document.getElementById('formStatus');
+ button.disabled=true;
+ button.textContent='SENDING...';
+ status.style.display='none';
+
+ const interest=v('interest');
+ const payload={
+   name:v('name'),
+   phone:v('phone'),
+   email:v('email'),
+   lead_type:interest,
+   property_address:v('address'),
+   timeline:v('date') ? 'Consultation requested: '+v('date') : '',
+   message:v('message'),
+   page:'/digital-business-card',
+   source:'Digital Business Card',
+   consent_to_contact:true,
+   fields:{
+     name:v('name'),
+     phone:v('phone'),
+     email:v('email'),
+     interest:interest,
+     property_address:v('address'),
+     preferred_date_time:v('date'),
+     notes:v('message'),
+     source:'Digital Business Card'
+   }
+ };
+
+ try{
+   const response=await fetch('https://blackstonesignatureproperty.com/api/leads',{
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body:JSON.stringify(payload)
+   });
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok) throw new Error(result.error || 'Unable to submit right now.');
+
+   status.textContent=result.message || 'Thank you. Your request was received and saved to Blackstone CRM. Sal will follow up shortly.';
+   status.style.background='#17351f';
+   status.style.display='block';
+
+   // If the API also sends Sal an email alert, reflect that in the confirmation.
+   if (result.notification_sent === true) {
+     status.textContent += ' An email notification was also sent to Sal.';
+   }
+
+   form.reset();
+   document.getElementById('interest').value=interest;
+   setTimeout(closeForm,3500);
+ }catch(err){
+   status.textContent='We could not send the form right now. Please call or text Sal at (925) 917-5595.';
+   status.style.background='#4a1d1d';
+   status.style.display='block';
+ }finally{
+   button.disabled=false;
+   button.textContent='SEND TO SAL';
+ }
+});
+async function shareCard(){
+ const data={
+   title:'Sal Gharibyar | Blackstone Signature Properties',
+   text:'Sal Gharibyar - Real Estate Broker / Owner',
+   url:'https://digital-card.gharibyar61.workers.dev/'
+ };
+ if(navigator.share){
+   try{await navigator.share(data)}catch(e){}
+ } else {
+   try{
+     await navigator.clipboard.writeText('https://digital-card.gharibyar61.workers.dev/');
+     alert('Card link copied. You can paste it into Messages, Mail, or anywhere else.');
+   }catch(e){
+     prompt('Copy this card link:', 'https://digital-card.gharibyar61.workers.dev/');
+   }
+ }
+}
+</script>
+</body></html>
