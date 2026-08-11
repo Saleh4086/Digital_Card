@@ -1,38 +1,63 @@
-BLACKSTONE CRM EMAIL NOTIFICATION PATCH — WORKER.JS ONLY
+BLACKSTONE DIGITAL CARD — CRM + EMAIL FIX
 
-THIS PATCH IS BASED ON THE EXACT WORKING ZIP YOU JUST UPLOADED:
-blackstrone_-New-website-main(4).zip
+THIS PACKAGE FIXES BOTH IN THE DIGITAL CARD WORKER:
+1) CRM saving
+2) Email lead alerts
 
-WHAT CHANGED:
-- Only worker.js was changed.
-- Existing /api/leads -> Supabase CRM saving remains intact.
-- After the CRM lead saves successfully, the Worker sends Sal an email alert through Resend.
-- If email sending fails, the CRM lead is still saved.
-- API response now includes: notification_sent: true/false
+Important design change:
+The card now submits to its OWN /api/leads endpoint.
+That removes the cross-domain dependency on the main website and avoids CORS problems.
+Do NOT replace your main website or CRM with this ZIP.
 
-DO NOT:
-- Do not replace the whole website.
-- Do not upload this to the Digital_Card Worker.
-- Do not upload this to the CRM static Worker green-wave-a8cd.
+UPLOAD TO:
+GitHub repository: Digital_Card
+Cloudflare Worker: digital-card
 
-YOU MUST ADD THESE TO THE SAME WEBSITE WORKER THAT CURRENTLY HAS:
-SUPABASE_URL / SUPABASE keys and handles /api/leads
+CLOUDFLARE BUILD SETTINGS
+Build command: npm install
+Deploy command: npm run deploy
+Root directory: /
 
-1) RESEND_API_KEY
-   Type: Secret
-   Value: your Resend API key
+REQUIRED DIGITAL-CARD WORKER VARIABLES / SECRETS
+Copy the same CRM values from the WORKING website Worker:
 
-2) RESEND_FROM_EMAIL
-   Type: Variable
-   Example after domain verification:
-   Blackstone Leads <leads@blackstonesignatureproperty.com>
+SUPABASE_URL
+  Variable
+  Your Blackstone CRM Supabase project URL
 
-3) LEAD_NOTIFICATION_EMAIL
-   Type: Variable
-   Value:
-   gharibyar61@gmail.com
+SUPABASE_SERVICE_ROLE_KEY
+  Secret
+  Recommended. Do not place it in GitHub.
 
-Until RESEND_API_KEY and RESEND_FROM_EMAIL are configured, CRM saving will still work but email alerts will be skipped.
+CRM_OWNER_USER_ID
+  Variable/Secret if your existing website Worker uses one.
+  Copy the exact existing value if present.
 
-EMAIL SUBJECT EXAMPLE:
-NEW BLACKSTONE LEAD - Seller - John Smith
+RESEND_API_KEY
+  Secret
+  Your Resend API key.
+
+RESEND_FROM_EMAIL
+  Variable
+  Example after Resend verifies the domain:
+  Blackstone Leads <leads@blackstonesignatureproperty.com>
+
+LEAD_NOTIFICATION_EMAIL
+  Variable
+  gharibyar61@gmail.com
+
+TEST
+After deploying, open:
+https://digital-card.gharibyar61.workers.dev/api/health
+
+You want:
+crm_configured: true
+email_configured: true
+
+Then submit one Digital Card test lead.
+Expected:
+- Lead appears in Blackstone CRM.
+- Email alert arrives at gharibyar61@gmail.com.
+- Card confirmation says both happened.
+
+Wrangler is pinned to 4.120.0 to avoid the failed latest-version/miniflare installation you saw.

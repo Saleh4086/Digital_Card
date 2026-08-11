@@ -137,7 +137,7 @@ document.getElementById('leadForm').addEventListener('submit',async function(e){
  };
 
  try{
-   const response=await fetch('https://blackstonesignatureproperty.com/api/leads',{
+   const response=await fetch('/api/leads',{
      method:'POST',
      headers:{'Content-Type':'application/json'},
      body:JSON.stringify(payload)
@@ -158,7 +158,8 @@ document.getElementById('leadForm').addEventListener('submit',async function(e){
    document.getElementById('interest').value=interest;
    setTimeout(closeForm,3500);
  }catch(err){
-   status.textContent='We could not send the form right now. Please call or text Sal at (925) 917-5595.';
+   const reason = err && err.message ? err.message : 'CRM connection error';
+   status.textContent='We could not save this lead right now. '+reason+' Please call or text Sal at (925) 917-5595.';
    status.style.background='#4a1d1d';
    status.style.display='block';
  }finally{
