@@ -1,0 +1,26 @@
+BLACKSTONE AI CONCIERGE — CLOUDFLARE PAGES SETUP
+
+This website includes a Cloudflare Pages Function at:
+/functions/api/chat.js
+
+1. Push all files and folders to the ROOT of your GitHub repository.
+   Important: the "functions" folder must be at the repository root beside index.html.
+
+2. In Cloudflare:
+   Workers & Pages > your Blackstone Pages project > Settings > Variables and Secrets > Add.
+
+3. Add:
+   Variable name: GEMINI_API_KEY
+   Type: Secret
+   Value: your Gemini API key from Google AI Studio
+
+4. Save, then deploy the latest GitHub commit again.
+
+5. Open the website and test Ask Blackstone AI.
+
+SECURITY
+- Do not put the API key in site.js, HTML, GitHub, or a public .env file.
+- The browser calls /api/chat. Cloudflare privately calls Gemini.
+
+FALLBACK
+If the key is missing or the Gemini request fails, the concierge still answers common Blackstone questions using built-in local knowledge.

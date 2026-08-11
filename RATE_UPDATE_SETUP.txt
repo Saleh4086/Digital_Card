@@ -1,0 +1,22 @@
+BLACKSTONE MORTGAGE RATE WATCH — CLOUDFLARE SETUP
+
+What changed
+- Preserved the existing website, Gemini AI Concierge, mortgage ticker, RentSpree links,
+  Coming Soon rental, forms, calculator, photos, and all pages.
+- Replaced the unreliable browser-only rate request with a Cloudflare Pages Function.
+- The site now requests /api/mortgage-rate, which securely retrieves the latest
+  Freddie Mac 30-year fixed national average from FRED.
+- This source updates weekly, not daily.
+
+Deployment
+1. Upload every file and folder in this package to the same GitHub repository.
+2. Be sure the functions/api/mortgage-rate.js file is included.
+3. Commit to the branch connected to Cloudflare Pages.
+4. In Cloudflare Pages, deploy the latest commit.
+5. Open https://your-domain.com/api/mortgage-rate to verify JSON appears.
+6. Hard-refresh the mortgage calculator and homepage.
+
+Important
+- No API key is needed for the mortgage-rate function.
+- Gemini still requires the existing GEMINI_API_KEY Cloudflare secret.
+- National weekly average only; actual lender rates vary.

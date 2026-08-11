@@ -1,0 +1,2 @@
+Upload all extracted files and folders to the root of your GitHub repository, replace existing files, and commit directly to main.
+This restores the running Freddie Mac mortgage-rate ticker at the top while keeping the Santa Cruz Coming Soon rental and updated AI widget.

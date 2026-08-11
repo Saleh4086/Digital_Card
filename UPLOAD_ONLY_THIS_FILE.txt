@@ -1,0 +1,15 @@
+BLACKSTONE SAFE DAILY RATE PATCH
+
+Only one existing website file is changed:
+functions/api/rates.js
+
+Upload/replace ONLY that file in the current GitHub website repository.
+Do not replace index.html, assets, Gemini files, RentSpree files, or any other website file.
+
+After Cloudflare deploys, test:
+https://blackstonesignatureproperty.com/api/rates
+
+Expected source when daily data is available:
+Mortgage News Daily Rate Index
+
+If Mortgage News Daily is temporarily unavailable, the endpoint automatically falls back to the Freddie Mac weekly national average rather than showing a made-up daily rate.

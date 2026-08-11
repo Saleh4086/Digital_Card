@@ -1,0 +1,12 @@
+BLACKSTONE DAILY BLOG AUTOMATION
+
+The website now includes blog.html and education.html.
+
+To make blog posts publish automatically every day, the static Cloudflare upload needs one additional backend step. Recommended architecture:
+1. Cloudflare Worker with a Cron Trigger (daily).
+2. Worker retrieves trusted sources (market/rate data plus official California/municipal property-management rule sources).
+3. AI model creates a short original summary with source links and a clear educational/not-legal-advice notice.
+4. Store posts in Cloudflare D1 or KV.
+5. blog.html fetches and displays the newest posts.
+
+Do not auto-publish legal/rule-change claims without linking to an official source.

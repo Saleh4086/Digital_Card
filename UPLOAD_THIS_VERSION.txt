@@ -1,0 +1,9 @@
+BLACKSTONE FINAL CORRECTION
+
+This package starts from the approved daily conventional + FHA version.
+It restores one synchronized /api/rates source for the top ticker and mortgage calculator.
+It adds the complete blog, seven articles, and expanded city SEO pages.
+No logo, colors, navigation styling, AI widget styling, listings, Santa Cruz Coming Soon, repairs, CRM link, or property-management content was intentionally redesigned.
+
+Upload all extracted files and folders to the GitHub repository root, replace existing files, and commit directly to main.
+After Cloudflare finishes, hard refresh the site (Ctrl+F5 on Windows or clear Safari website data on iPhone).

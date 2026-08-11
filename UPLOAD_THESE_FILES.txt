@@ -1,0 +1,15 @@
+BLACKSTONE WEBSITE PATCH
+
+Upload the extracted files to the ROOT of your GitHub repository and allow replacement of matching files.
+Keep the assets folder structure.
+
+Important files in this patch:
+- worker.js — fixes basic math and duplicate messages
+- property-management.html — adds 2413 Santa Cruz Ct as Coming Soon
+- properties.html — keeps Santa Cruz as Coming Soon
+- assets/blackstone-ai-widget.js — same working widget on desktop and mobile, using /api/chat
+- assets/blackstone-ai-widget.css — new black/gold responsive widget styling
+- assets/2413-santa-cruz.webp — actual Santa Cruz property image
+
+Commit directly to main. Cloudflare should deploy automatically.
+Do not upload the ZIP itself. Extract it first, then upload the files and folders.

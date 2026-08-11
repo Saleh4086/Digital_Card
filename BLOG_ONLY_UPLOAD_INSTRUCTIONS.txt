@@ -1,0 +1,10 @@
+BLACKSTONE BLOG-ONLY SEO PATCH
+
+This patch changes only:
+- blog.html
+- articles/ (7 new SEO articles)
+- sitemap.xml
+
+It does NOT change the existing design, AI, mortgage rates, navigation, listings, Santa Cruz Coming Soon, repair requests, CRM link, or any other page.
+
+Upload the extracted blog.html, articles folder, and sitemap.xml to the GitHub repository root. Allow blog.html and sitemap.xml to replace the existing files, then commit directly to main.

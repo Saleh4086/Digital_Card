@@ -1,0 +1,9 @@
+Upload every extracted file and folder to the ROOT of the GitHub repository. Replace existing files and commit directly to main.
+
+Included:
+- Running Freddie Mac mortgage-rate watch below the navigation on every page
+- Mortgage Calculator link
+- Back At You CRM footer link on every page
+- Repair Request navigation link, full page and embedded Property Management form
+- Santa Cruz Court Coming Soon rental
+- Updated desktop/mobile Blackstone AI widget

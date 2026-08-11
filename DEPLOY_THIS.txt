@@ -1,0 +1,10 @@
+BLACKSTONE GEMINI — DEPLOYMENT PACKAGE
+
+1. Upload this ZIP as a NEW PRODUCTION deployment in the Cloudflare Pages project "blackstone-new-website".
+2. Keep the production secret named exactly: GEMINI_API_KEY
+3. This package uses _worker.js because Cloudflare dashboard drag-and-drop does not compile a functions folder.
+4. After deployment, open: https://YOUR-DOMAIN/api/health
+   Expected result: {"ok":true,"geminiKeyConfigured":true}
+5. Then test the Blackstone AI chat.
+
+Security: never place the Gemini key inside HTML or browser JavaScript.

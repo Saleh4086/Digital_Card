@@ -1,0 +1,1 @@
+Website forms now submit to gharibyar61@gmail.com via FormSubmit. On the first form submission, FormSubmit may send a one-time activation/verification email. Open that email and confirm once; after that, website leads and repair requests will be delivered by email.
