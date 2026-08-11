@@ -754,56 +754,53 @@ async function insertSupabaseLead(payload, env) {
 }
 
 
-async function sendLeadEmailNotification(payload, savedLead, env) {
-  const apiKey = env?.RESEND_API_KEY;
+async function sendLeadNotificationEmail(payload, savedLead, env) {
+  const resendKey = String(env?.RESEND_API_KEY || "").trim();
   const toEmail = String(env?.LEAD_NOTIFICATION_EMAIL || "gharibyar61@gmail.com").trim();
   const fromEmail = String(env?.RESEND_FROM_EMAIL || "").trim();
 
-  // Lead capture must continue working even before email notification is configured.
-  if (!apiKey || !fromEmail || !toEmail) {
-    console.warn("Lead email notification skipped: RESEND_API_KEY, RESEND_FROM_EMAIL, or LEAD_NOTIFICATION_EMAIL is missing.");
+  // Keep CRM lead capture working even before email is configured.
+  if (!resendKey || !fromEmail || !toEmail) {
+    console.warn("Lead email alert skipped because email settings are incomplete.");
     return { sent: false, skipped: true };
   }
 
-  const leadLabel = String(payload.lead_type || "contact")
+  const leadType = String(payload.lead_type || "New Lead")
     .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .replace(/\b\w/g, c => c.toUpperCase());
 
-  const subjectName = payload.name || "New Lead";
-  const subject = `NEW DIGITAL CARD LEAD - ${leadLabel} - ${subjectName}`;
+  const subject = `NEW BLACKSTONE LEAD - ${leadType} - ${payload.name || "Unknown"}`;
 
-  const lines = [
-    "New lead received by Blackstone.",
+  const emailText = [
+    "A new lead was saved to Blackstone CRM.",
     "",
     `Name: ${payload.name || ""}`,
     `Phone: ${payload.phone || ""}`,
     `Email: ${payload.email || ""}`,
-    `Lead Type: ${leadLabel}`,
+    `Lead Type: ${leadType}`,
     `Property Address: ${payload.property_address || ""}`,
     `City: ${payload.city || ""}`,
     `Timeline: ${payload.timeline || ""}`,
-    `Source: ${payload.source || ""}`,
+    `Source: ${payload.source || "Digital Business Card"}`,
     `CRM Lead ID: ${savedLead?.id || ""}`,
     "",
     "Notes:",
     payload.notes || ""
-  ];
+  ].join("\n");
 
   const body = {
     from: fromEmail,
     to: [toEmail],
     subject,
-    text: lines.join("\n")
+    text: emailText
   };
 
-  if (payload.email) {
-    body.reply_to = payload.email;
-  }
+  if (payload.email) body.reply_to = payload.email;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${apiKey}`,
+      "Authorization": `Bearer ${resendKey}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify(body)
@@ -814,8 +811,7 @@ async function sendLeadEmailNotification(payload, savedLead, env) {
   try { data = raw ? JSON.parse(raw) : null; } catch { data = raw; }
 
   if (!response.ok) {
-    const detail = data?.message || raw || `Resend returned ${response.status}`;
-    throw new Error(detail);
+    throw new Error(data?.message || raw || `Resend returned ${response.status}`);
   }
 
   return { sent: true, id: data?.id || null };
@@ -846,20 +842,20 @@ async function handleLeadCapture(request, env) {
   try {
     const savedLead = await insertSupabaseLead(payload, env);
 
-    let notification = { sent: false };
+    let emailNotification = { sent: false };
     try {
-      notification = await sendLeadEmailNotification(payload, savedLead, env);
+      emailNotification = await sendLeadNotificationEmail(payload, savedLead, env);
     } catch (emailError) {
-      // Never lose a CRM lead just because the alert email provider is temporarily unavailable.
-      console.error("Lead notification email error:", emailError);
-      notification = { sent: false, error: emailError.message };
+      // Never fail or lose a CRM lead because an alert email could not be sent.
+      console.error("Lead email notification error:", emailError);
+      emailNotification = { sent: false, error: emailError.message };
     }
 
     return json({
       ok: true,
       message: "Thank you. Your request was received and Sal will follow up shortly.",
       lead_id: savedLead?.id || null,
-      notification_sent: Boolean(notification?.sent)
+      notification_sent: Boolean(emailNotification?.sent)
     });
   } catch (error) {
     console.error("CRM lead capture error:", error);
