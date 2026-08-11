@@ -1,3 +1,4 @@
+
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store"
@@ -21,12 +22,11 @@ function leadType(v) {
   return "contact";
 }
 
-function buildLead(input, env) {
+function buildLead(input) {
   const f = input?.fields && typeof input.fields === "object" ? input.fields : {};
   const preferred = clean(f.preferred_date_time || "", 200);
   const message = clean(input?.message || f.notes || f.message, 5000);
-
-  const lead = {
+  return {
     name: clean(input?.name || f.name || f.full_name, 200) || "Digital Card Lead",
     phone: clean(input?.phone || f.phone, 80) || null,
     email: clean(input?.email || f.email, 320).toLowerCase() || null,
@@ -40,40 +40,36 @@ function buildLead(input, env) {
     notes: [message, preferred ? `Preferred date/time: ${preferred}` : ""].filter(Boolean).join("\n\n") || null,
     consent_to_contact: input?.consent_to_contact !== false
   };
-
-  const ownerId = clean(env.CRM_OWNER_USER_ID, 100);
-  if (ownerId) lead.user_id = ownerId;
-
-  return lead;
 }
 
 async function saveCRM(payload, env) {
-  const base = clean(env.SUPABASE_URL, 500).replace(/\/$/, "");
-  const key = clean(env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY, 1000);
+  // Use the Digital Card Worker's EXISTING Cloudflare variable names.
+  const supabaseUrl = clean(env.SUPABASE_URL, 1000).replace(/\/$/, "");
+  const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY, 10000);
+  const ownerId = clean(env.CRM_OWNER_USER_ID, 100);
 
-  if (!base || !key) {
-    throw new Error("Digital Card Worker is missing Supabase CRM settings.");
+  if (!supabaseUrl || !serviceKey || !ownerId) {
+    throw new Error("Digital Card Worker is missing Supabase CRM settings");
   }
 
-  const r = await fetch(`${base}/rest/v1/leads?select=*`, {
+  const row = { ...payload, user_id: ownerId, source: "Digital Business Card" };
+  const r = await fetch(`${supabaseUrl}/rest/v1/leads`, {
     method: "POST",
     headers: {
+      "apikey": serviceKey,
+      "Authorization": `Bearer ${serviceKey}`,
       "Content-Type": "application/json",
-      "apikey": key,
-      "Authorization": `Bearer ${key}`,
       "Prefer": "return=representation"
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(row)
   });
 
   const raw = await r.text();
   let data = null;
   try { data = raw ? JSON.parse(raw) : null; } catch { data = raw; }
-
   if (!r.ok) {
     throw new Error(data?.message || data?.details || data?.hint || raw || `Supabase returned ${r.status}`);
   }
-
   return Array.isArray(data) ? (data[0] || {}) : (data || {});
 }
 
@@ -82,7 +78,7 @@ async function emailSal(payload, saved, env) {
   const from = clean(env.RESEND_FROM_EMAIL, 320);
   const to = clean(env.LEAD_NOTIFICATION_EMAIL || "gharibyar61@gmail.com", 320);
 
-  // CRM saving must still work even if email is not configured yet.
+  // CRM must work even if email isn't configured yet.
   if (!key || !from || !to) return { sent: false, skipped: true };
 
   const label = payload.lead_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
@@ -91,7 +87,7 @@ async function emailSal(payload, saved, env) {
     to: [to],
     subject: `NEW DIGITAL CARD LEAD - ${label} - ${payload.name}`,
     text: [
-      "A new lead was saved to Blackstone CRM from Sal's Digital Business Card.",
+      "A new lead was saved to Blackstone CRM.",
       "",
       `Name: ${payload.name || ""}`,
       `Phone: ${payload.phone || ""}`,
@@ -134,11 +130,12 @@ async function handleLead(request, env) {
   try { input = await request.json(); }
   catch { return json({ error: "Invalid form submission." }, 400); }
 
-  const payload = buildLead(input, env);
+  const payload = buildLead(input);
   if (!payload.phone && !payload.email) {
     return json({ error: "Please provide a phone number or email." }, 400);
   }
 
+  // CRM save is the primary operation.
   let saved;
   try {
     saved = await saveCRM(payload, env);
@@ -147,6 +144,7 @@ async function handleLead(request, env) {
     return json({ error: `CRM save failed: ${e.message}` }, 502);
   }
 
+  // Email is secondary and can never undo/fail the saved CRM lead.
   let emailSent = false;
   let emailError = null;
   try {
@@ -160,7 +158,6 @@ async function handleLead(request, env) {
   return json({
     ok: true,
     lead_id: saved?.id || null,
-    source: saved?.source || payload.source,
     notification_sent: emailSent,
     notification_error: emailError,
     message: emailSent
@@ -176,10 +173,7 @@ export default {
     if (url.pathname === "/api/health") {
       return json({
         ok: true,
-        crm_configured: Boolean(
-          env.SUPABASE_URL &&
-          (env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY)
-        ),
+        crm_configured: Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY && env.CRM_OWNER_USER_ID),
         crm_mode: "direct_supabase",
         owner_configured: Boolean(env.CRM_OWNER_USER_ID),
         email_configured: Boolean(
