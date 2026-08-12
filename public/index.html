@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050505">
 <title>Sal Gharibyar | Blackstone Signature Properties</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sal's Card">
 <style>
 :root{--gold:#d8aa3d;--gold2:#f2d46b;--bg:#050505;--panel:#121212;--text:#fff;--muted:#bdbdbd}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#24201a 0,#090909 32%,#000 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -16,7 +20,7 @@ h1{margin:8px 0 2px;font-size:31px}.title{color:var(--gold2);font-weight:700;let
 .primary{display:block;background:linear-gradient(135deg,#a97916,#f0ca58);color:#090909;border-radius:16px;padding:16px;text-align:center;text-decoration:none;font-weight:800;margin:12px 0}
 .contact{background:#0e0e0e;border:1px solid #333;border-radius:18px;padding:16px;margin:12px 0}.contact a{color:#fff;text-decoration:none}.row{padding:8px 0;border-bottom:1px solid #262626}.row:last-child{border:0}
 h2{text-align:center;color:var(--gold2);font-size:20px;margin:28px 0 13px}.services{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{min-height:105px;display:flex;flex-direction:column;justify-content:center}.tile b{color:var(--gold2);font-size:16px}.tile small{color:#ccc;margin-top:7px}
-.full{grid-column:1/-1}.share{margin-top:14px}.foot{text-align:center;color:#8d8d8d;font-size:12px;margin-top:30px}
+.full{grid-column:1/-1}.share{margin-top:14px}.install{border:1px solid var(--gold);background:#111;color:var(--gold2);cursor:pointer;width:100%}.install-help{display:none;position:fixed;inset:0;background:#000d;z-index:30;align-items:flex-end;justify-content:center}.install-help.open{display:flex}.install-sheet{width:min(560px,100%);background:#111;border:1px solid #444;border-radius:24px 24px 0 0;padding:22px;color:#fff}.install-sheet h3{color:var(--gold2);margin:0 0 12px}.install-sheet p{line-height:1.5;color:#ddd}.install-sheet .done{width:100%;border:0;border-radius:13px;padding:14px;background:linear-gradient(135deg,#a97916,#f0ca58);font-weight:800}.foot{text-align:center;color:#8d8d8d;font-size:12px;margin-top:30px}
 .modal{position:fixed;inset:0;background:#000d;display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.open{display:flex}.sheet{width:min(560px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid #444;border-radius:24px 24px 0 0;padding:20px}
 .sheet h3{color:var(--gold2);font-size:23px;margin:0 0 12px}.close{float:right;border:0;background:#292929;color:white;border-radius:50%;width:36px;height:36px;font-size:20px}
 label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,select{width:100%;padding:13px;border-radius:11px;border:1px solid #444;background:#090909;color:#fff;font-size:16px}textarea{min-height:90px}
@@ -70,6 +74,7 @@ label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,s
 <button class="tile full" onclick="openForm('Book a Consultation')"><b>📅 BOOK A CONSULTATION</b><small>Send your preferred date and time</small></button>
 </div>
 
+<button class="primary install" id="installCardBtn" onclick="installCard()">▣ SAVE CARD TO HOME SCREEN</button>
 <button class="primary share" onclick="shareCard()">↗ SHARE MY CARD</button>
 <div class="foot">20+ YEARS OF EXPERIENCE<br>BROKER-OWNED &amp; OPERATED · DEDICATED TO YOUR SUCCESS</div>
 </main>
@@ -108,6 +113,13 @@ label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,s
   <input type="hidden" name="How Can I Help" id="emailLeadMessage">
 </form>
 </div></div>
+<div class="install-help" id="installHelp" onclick="if(event.target===this)closeInstallHelp()">
+  <div class="install-sheet">
+    <h3>Save Sal’s Card to Your Phone</h3>
+    <p id="installInstructions">Open your browser menu and choose <b>Add to Home Screen</b> or <b>Install app</b>. The Blackstone card will then appear on your Home Screen like an app.</p>
+    <button class="done" onclick="closeInstallHelp()">GOT IT</button>
+  </div>
+</div>
 
 <script>
 function openForm(type){
@@ -202,6 +214,38 @@ document.getElementById('leadForm').addEventListener('submit',async function(e){
    button.textContent='SEND TO SAL';
  }
 });
+
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  const b=document.getElementById('installCardBtn');
+  if(b) b.textContent='✓ SAVED TO HOME SCREEN';
+});
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
+function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true}
+function closeInstallHelp(){document.getElementById('installHelp').classList.remove('open')}
+async function installCard(){
+  if(isStandalone()){alert('Sal’s card is already saved to your Home Screen.');return;}
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{await deferredInstallPrompt.userChoice}catch(e){}
+    deferredInstallPrompt=null;
+    return;
+  }
+  const msg=document.getElementById('installInstructions');
+  if(isIOS()){
+    msg.innerHTML='On iPhone/iPad: tap the <b>Share</b> button in Safari (the square with the up arrow), then scroll and tap <b>Add to Home Screen</b>, then tap <b>Add</b>. The Blackstone icon will appear on your Home Screen.';
+  }else{
+    msg.innerHTML='Open your browser menu and choose <b>Add to Home Screen</b> or <b>Install app</b>. The Blackstone icon will appear on your Home Screen.';
+  }
+  document.getElementById('installHelp').classList.add('open');
+}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(err=>console.error('Service worker registration failed:',err)))}
+
 async function shareCard(){
  const data={
    title:'Sal Gharibyar | Blackstone Signature Properties',
