@@ -90,6 +90,23 @@ label{display:block;color:#ddd;font-size:13px;margin:12px 0 5px}input,textarea,s
 <div id="formStatus" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#171717;color:#fff"></div>
 <div class="note">Your information is submitted securely to Blackstone's CRM. You stay on this digital card and do not need to open your email app.</div>
 </form>
+
+<!-- Email notification is intentionally separate from the CRM submission.
+     It runs only after the CRM confirms the lead was saved successfully. -->
+<iframe name="digital-card-email-frame" id="digital-card-email-frame" style="display:none" title="Email notification"></iframe>
+<form id="digitalCardEmailForm" action="https://formsubmit.co/gharibyar61@gmail.com" method="POST" target="digital-card-email-frame" style="display:none">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_subject" value="NEW DIGITAL BUSINESS CARD LEAD">
+  <input type="hidden" name="Source" value="Digital Business Card">
+  <input type="hidden" name="Lead Type" id="emailLeadType">
+  <input type="hidden" name="Name" id="emailLeadName">
+  <input type="hidden" name="Phone" id="emailLeadPhone">
+  <input type="hidden" name="Email" id="emailLeadEmail">
+  <input type="hidden" name="Property Address / Area" id="emailLeadAddress">
+  <input type="hidden" name="Preferred Date / Time" id="emailLeadDate">
+  <input type="hidden" name="How Can I Help" id="emailLeadMessage">
+</form>
 </div></div>
 
 <script>
@@ -149,8 +166,26 @@ document.getElementById('leadForm').addEventListener('submit',async function(e){
    status.style.background='#17351f';
    status.style.display='block';
 
-   // If the API also sends Sal an email alert, reflect that in the confirmation.
-   if (result.notification_sent === true) {
+   // CRM SAVE SUCCEEDED. Now send Sal the same style of email notification
+   // used by the main Blackstone website, without navigating away from the card.
+   let emailNotificationQueued=false;
+   try {
+     document.getElementById('emailLeadType').value=interest;
+     document.getElementById('emailLeadName').value=v('name');
+     document.getElementById('emailLeadPhone').value=v('phone');
+     document.getElementById('emailLeadEmail').value=v('email');
+     document.getElementById('emailLeadAddress').value=v('address');
+     document.getElementById('emailLeadDate').value=v('date');
+     document.getElementById('emailLeadMessage').value=v('message');
+     HTMLFormElement.prototype.submit.call(document.getElementById('digitalCardEmailForm'));
+     emailNotificationQueued=true;
+   } catch(emailErr) {
+     console.error('Digital Card email notification failed:', emailErr);
+   }
+
+   // If the Worker itself sent an email, or the browser email notification was queued,
+   // show that to the user. Email failure never changes the successful CRM save.
+   if (result.notification_sent === true || emailNotificationQueued) {
      status.textContent += ' An email notification was also sent to Sal.';
    }
 

@@ -1,22 +1,17 @@
-DIGITAL CARD ONLY - ROBUST CRM FALLBACK FIX
+DIGITAL CARD — EMAIL NOTIFICATION ONLY PATCH
 
-This package contains ONLY the Digital Card files. It does not contain your main website.
+BASELINE:
+Digital_Card_ONLY_ROBUST_CRM_ASSETS_FIX.zip
 
-What is fixed:
-1. Digital Card source is forced to: Digital Business Card.
-2. If Cloudflare exposes SUPABASE_SERVICE_ROLE_KEY, the card saves directly to Supabase CRM.
-3. If the uploaded Worker version cannot see the secret, the card automatically uses the already-working Blackstone website /api/leads CRM endpoint instead of failing.
-4. The Worker no longer crashes in Cloudflare's editor preview when ASSETS is unavailable.
-5. Email remains secondary; CRM saving will not fail because Digital Card Resend variables are missing.
+ONLY CHANGE:
+- public/index.html now sends an email notification to gharibyar61@gmail.com AFTER the CRM confirms the lead was saved.
+- Uses the same FormSubmit approach already used by the Blackstone website.
+- Email sends in a hidden iframe, so the visitor stays on the digital card.
+- CRM/Worker logic was NOT changed.
+- worker.js was NOT changed.
+- wrangler.jsonc was NOT changed.
+- Supabase settings were NOT changed.
+- Lead source remains Digital Business Card.
 
-Existing Cloudflare variables can stay exactly as they are:
-- CRM_OWNER_USER_ID
-- SUPABASE_URL
-- SUPABASE_SERVICE_ROLE_KEY
-
-Optional Digital Card email variables:
-- RESEND_API_KEY
-- RESEND_FROM_EMAIL
-- LEAD_NOTIFICATION_EMAIL
-
-No Supabase database change is required for this package.
+IMPORTANT:
+If FormSubmit asks for a one-time email activation, confirm the activation email once. The Blackstone website already uses this email address, so it may already be activated.
