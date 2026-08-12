@@ -48,11 +48,17 @@ async function saveCRM(payload, env) {
   const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY, 10000);
   const ownerId = clean(env.CRM_OWNER_USER_ID, 100);
 
-  if (!supabaseUrl || !serviceKey || !ownerId) {
-    throw new Error("Digital Card Worker is missing Supabase CRM settings");
+  // The database trigger now assigns Sal's owner UUID when user_id is absent.
+  // Therefore only the Supabase URL and service-role key are required here.
+  const missing = [];
+  if (!supabaseUrl) missing.push("SUPABASE_URL");
+  if (!serviceKey) missing.push("SUPABASE_SERVICE_ROLE_KEY");
+  if (missing.length) {
+    throw new Error(`Digital Card Worker is missing: ${missing.join(", ")}`);
   }
 
-  const row = { ...payload, user_id: ownerId, source: "Digital Business Card" };
+  const row = { ...payload, source: "Digital Business Card" };
+  if (ownerId) row.user_id = ownerId;
   const r = await fetch(`${supabaseUrl}/rest/v1/leads`, {
     method: "POST",
     headers: {
@@ -173,8 +179,10 @@ export default {
     if (url.pathname === "/api/health") {
       return json({
         ok: true,
-        crm_configured: Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY && env.CRM_OWNER_USER_ID),
-        crm_mode: "direct_supabase",
+        crm_configured: Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY),
+        crm_mode: "direct_supabase_with_db_owner_trigger",
+        supabase_url_configured: Boolean(env.SUPABASE_URL),
+        service_role_key_configured: Boolean(env.SUPABASE_SERVICE_ROLE_KEY),
         owner_configured: Boolean(env.CRM_OWNER_USER_ID),
         email_configured: Boolean(
           env.RESEND_API_KEY &&
