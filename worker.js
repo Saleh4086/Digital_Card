@@ -1,4 +1,3 @@
-
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store"
@@ -26,6 +25,7 @@ function buildLead(input) {
   const f = input?.fields && typeof input.fields === "object" ? input.fields : {};
   const preferred = clean(f.preferred_date_time || "", 200);
   const message = clean(input?.message || f.notes || f.message, 5000);
+
   return {
     name: clean(input?.name || f.name || f.full_name, 200) || "Digital Card Lead",
     phone: clean(input?.phone || f.phone, 80) || null,
@@ -42,23 +42,24 @@ function buildLead(input) {
   };
 }
 
-async function saveCRM(payload, env) {
-  // Use the Digital Card Worker's EXISTING Cloudflare variable names.
-  const supabaseUrl = clean(env.SUPABASE_URL, 1000).replace(/\/$/, "");
-  const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY, 10000);
-  const ownerId = clean(env.CRM_OWNER_USER_ID, 100);
+async function parseResponse(r) {
+  const raw = await r.text();
+  let data = null;
+  try { data = raw ? JSON.parse(raw) : null; }
+  catch { data = raw; }
+  return { raw, data };
+}
 
-  // The database trigger now assigns Sal's owner UUID when user_id is absent.
-  // Therefore only the Supabase URL and service-role key are required here.
-  const missing = [];
-  if (!supabaseUrl) missing.push("SUPABASE_URL");
-  if (!serviceKey) missing.push("SUPABASE_SERVICE_ROLE_KEY");
-  if (missing.length) {
-    throw new Error(`Digital Card Worker is missing: ${missing.join(", ")}`);
-  }
+async function saveDirectToSupabase(payload, env) {
+  const supabaseUrl = clean(env?.SUPABASE_URL, 1000).replace(/\/$/, "");
+  const serviceKey = clean(env?.SUPABASE_SERVICE_ROLE_KEY, 10000);
+  const ownerId = clean(env?.CRM_OWNER_USER_ID, 100);
+
+  if (!supabaseUrl || !serviceKey) return null;
 
   const row = { ...payload, source: "Digital Business Card" };
   if (ownerId) row.user_id = ownerId;
+
   const r = await fetch(`${supabaseUrl}/rest/v1/leads`, {
     method: "POST",
     headers: {
@@ -70,21 +71,81 @@ async function saveCRM(payload, env) {
     body: JSON.stringify(row)
   });
 
-  const raw = await r.text();
-  let data = null;
-  try { data = raw ? JSON.parse(raw) : null; } catch { data = raw; }
+  const { raw, data } = await parseResponse(r);
   if (!r.ok) {
     throw new Error(data?.message || data?.details || data?.hint || raw || `Supabase returned ${r.status}`);
   }
-  return Array.isArray(data) ? (data[0] || {}) : (data || {});
+
+  return {
+    saved: Array.isArray(data) ? (data[0] || {}) : (data || {}),
+    mode: "direct_supabase",
+    websiteNotificationMayHaveSent: false
+  };
+}
+
+async function saveThroughWebsite(payload, env) {
+  const endpoint = clean(
+    env?.CRM_API_URL || "https://blackstonesignatureproperty.com/api/leads",
+    1000
+  );
+
+  const websitePayload = {
+    ...payload,
+    source: "Digital Business Card",
+    page: "/digital-business-card",
+    fields: {
+      name: payload.name || "",
+      phone: payload.phone || "",
+      email: payload.email || "",
+      property_address: payload.property_address || "",
+      city: payload.city || "",
+      lead_type: payload.lead_type || "",
+      timeline: payload.timeline || "",
+      motivation: payload.motivation || "",
+      notes: payload.notes || "",
+      source: "Digital Business Card"
+    }
+  };
+
+  const separator = endpoint.includes("?") ? "&" : "?";
+  const r = await fetch(`${endpoint}${separator}source=digital-business-card`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "X-Lead-Source": "Digital Business Card"
+    },
+    body: JSON.stringify(websitePayload)
+  });
+
+  const { raw, data } = await parseResponse(r);
+  if (!r.ok) {
+    throw new Error(data?.error || data?.message || data?.details || raw || `Website CRM API returned ${r.status}`);
+  }
+
+  return {
+    saved: data?.lead || data?.data || data || {},
+    mode: "website_crm_api_fallback",
+    websiteNotificationMayHaveSent: Boolean(data?.notification_sent || data?.email_sent || data?.ok)
+  };
+}
+
+async function saveCRM(payload, env) {
+  // Preferred path: direct Supabase when the secret is available.
+  // Safe fallback: use the already-working Blackstone website CRM endpoint.
+  // This makes the Digital Card keep working even if Cloudflare's uploaded
+  // Worker version cannot see the dashboard Secret binding.
+  const direct = await saveDirectToSupabase(payload, env);
+  if (direct) return direct;
+  return saveThroughWebsite(payload, env);
 }
 
 async function emailSal(payload, saved, env) {
-  const key = clean(env.RESEND_API_KEY, 500);
-  const from = clean(env.RESEND_FROM_EMAIL, 320);
-  const to = clean(env.LEAD_NOTIFICATION_EMAIL || "gharibyar61@gmail.com", 320);
+  const key = clean(env?.RESEND_API_KEY, 500);
+  const from = clean(env?.RESEND_FROM_EMAIL, 320);
+  const to = clean(env?.LEAD_NOTIFICATION_EMAIL || "gharibyar61@gmail.com", 320);
 
-  // CRM must work even if email isn't configured yet.
+  // CRM must work even if Digital Card email variables are not configured.
   if (!key || !from || !to) return { sent: false, skipped: true };
 
   const label = payload.lead_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
@@ -102,7 +163,7 @@ async function emailSal(payload, saved, env) {
       `Property Address: ${payload.property_address || ""}`,
       `City: ${payload.city || ""}`,
       `Timeline: ${payload.timeline || ""}`,
-      `Source: ${payload.source}`,
+      `Source: Digital Business Card`,
       `CRM Lead ID: ${saved?.id || ""}`,
       "",
       "Notes:",
@@ -121,10 +182,7 @@ async function emailSal(payload, saved, env) {
     body: JSON.stringify(body)
   });
 
-  const raw = await r.text();
-  let data = null;
-  try { data = raw ? JSON.parse(raw) : null; } catch { data = raw; }
-
+  const { raw, data } = await parseResponse(r);
   if (!r.ok) throw new Error(data?.message || raw || `Resend returned ${r.status}`);
   return { sent: true, id: data?.id || null };
 }
@@ -141,29 +199,33 @@ async function handleLead(request, env) {
     return json({ error: "Please provide a phone number or email." }, 400);
   }
 
-  // CRM save is the primary operation.
-  let saved;
+  let crmResult;
   try {
-    saved = await saveCRM(payload, env);
+    crmResult = await saveCRM(payload, env);
   } catch (e) {
     console.error("CRM save failed:", e);
     return json({ error: `CRM save failed: ${e.message}` }, 502);
   }
 
-  // Email is secondary and can never undo/fail the saved CRM lead.
   let emailSent = false;
   let emailError = null;
+
+  // If the website fallback is used, that endpoint already handles the website's
+  // lead notification. Only call Resend here when its Digital Card vars exist.
   try {
-    const result = await emailSal(payload, saved, env);
-    emailSent = Boolean(result?.sent);
+    const result = await emailSal(payload, crmResult.saved, env);
+    emailSent = Boolean(result?.sent) || Boolean(crmResult.websiteNotificationMayHaveSent);
   } catch (e) {
     emailError = e.message;
     console.error("Email notification failed:", e);
+    emailSent = Boolean(crmResult.websiteNotificationMayHaveSent);
   }
 
   return json({
     ok: true,
-    lead_id: saved?.id || null,
+    lead_id: crmResult.saved?.id || crmResult.saved?.lead_id || null,
+    source: "Digital Business Card",
+    crm_mode: crmResult.mode,
     notification_sent: emailSent,
     notification_error: emailError,
     message: emailSent
@@ -173,22 +235,19 @@ async function handleLead(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env = {}) {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/health") {
       return json({
         ok: true,
-        crm_configured: Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY),
-        crm_mode: "direct_supabase_with_db_owner_trigger",
-        supabase_url_configured: Boolean(env.SUPABASE_URL),
-        service_role_key_configured: Boolean(env.SUPABASE_SERVICE_ROLE_KEY),
-        owner_configured: Boolean(env.CRM_OWNER_USER_ID),
-        email_configured: Boolean(
-          env.RESEND_API_KEY &&
-          env.RESEND_FROM_EMAIL &&
-          (env.LEAD_NOTIFICATION_EMAIL || "gharibyar61@gmail.com")
-        )
+        direct_supabase_available: Boolean(env?.SUPABASE_URL && env?.SUPABASE_SERVICE_ROLE_KEY),
+        supabase_url_configured: Boolean(env?.SUPABASE_URL),
+        service_role_key_configured: Boolean(env?.SUPABASE_SERVICE_ROLE_KEY),
+        owner_configured: Boolean(env?.CRM_OWNER_USER_ID),
+        fallback_endpoint: clean(env?.CRM_API_URL || "https://blackstonesignatureproperty.com/api/leads", 1000),
+        email_configured: Boolean(env?.RESEND_API_KEY && env?.RESEND_FROM_EMAIL),
+        source: "Digital Business Card"
       });
     }
 
@@ -196,6 +255,15 @@ export default {
       return handleLead(request, env);
     }
 
-    return env.ASSETS.fetch(request);
+    // In production Cloudflare serves the files in /public as static assets.
+    // The dashboard preview can omit the ASSETS binding, so never crash here.
+    if (env?.ASSETS && typeof env.ASSETS.fetch === "function") {
+      return env.ASSETS.fetch(request);
+    }
+
+    return new Response("Digital Card static asset preview unavailable.", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" }
+    });
   }
 };
